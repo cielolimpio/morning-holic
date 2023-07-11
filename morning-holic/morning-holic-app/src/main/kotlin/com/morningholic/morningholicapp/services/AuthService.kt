@@ -23,6 +23,7 @@ class AuthService(
         name: String,
         phoneNumber: String,
         password: String,
+        nickname: String,
     ): JwtToken {
         if (name.isBlank()) {
             throw MHException(
@@ -54,11 +55,19 @@ class AuthService(
                     "This Phone Number Already Exists"
                 )
 
+            if (!Users.select { Users.nickname eq nickname }.empty())
+                throw MHException(
+                    ErrorCodeEnum.ALREADY_EXISTED_NICKNAME.code,
+                    HttpStatus.CONFLICT,
+                    "This Nickname Already Exists"
+                )
+
             val userId = Users.insertAndGetId {
                 it[this.name] = name
                 it[this.phoneNumber] = phoneNumber
                 it[this.password] = passwordEncoder.encode(password)
                 it[this.role] = RoleEnum.USER
+                it[this.nickname] = nickname
                 it[this.status] = UserStatusEnum.INITIAL
                 it[this.createdAt] = LocalDateTime.now()
                 it[this.updatedAt] = LocalDateTime.now()

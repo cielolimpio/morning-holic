@@ -42,9 +42,9 @@ object JwtUtils {
             .compact()
 
         return JwtToken (
+            userId = userId,
             accessToken = accessToken,
             refreshToken = refreshToken,
-            userId = userId,
         )
     }
 
