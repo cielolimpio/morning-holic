@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse
 
 
 @Component
-class ResponseInterceptor: HandlerInterceptor {
-    private val objectMapper: ObjectMapper? = null
+class ResponseInterceptor(
+    private val objectMapper: ObjectMapper
+): HandlerInterceptor {
 
-    @Throws(Exception::class)
     override fun afterCompletion(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -22,7 +22,7 @@ class ResponseInterceptor: HandlerInterceptor {
     ) {
         val res = response as ContentCachingResponseWrapper
         val contentString = String(res.contentAsByteArray)
-        val readValue = objectMapper!!.readValue(contentString, Any::class.java)
+        val readValue = objectMapper.readValue(contentString, Any::class.java)
         val objectResponseEntity: ResponseEntity<Any> = ResponseEntity.ok(readValue)
         val wrappedBody = objectMapper.writeValueAsString(objectResponseEntity)
         res.resetBuffer()
