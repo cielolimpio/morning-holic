@@ -1,5 +1,6 @@
 package com.morningholic.morningholicapp.controllers
 
+import com.morningholic.morningholicapp.payloads.request.LoginRequest
 import com.morningholic.morningholicapp.payloads.request.SignUpRequest
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse.Companion.toResponse
@@ -23,6 +24,17 @@ class AuthController(
             phoneNumber = request.phoneNumber,
             password = request.password,
             nickname = request.nickname,
+        )
+        return jwtToken.toResponse()
+    }
+
+    @PostMapping("/login")
+    fun login(
+        @RequestBody request: LoginRequest
+    ): JwtTokenResponse {
+        val jwtToken = authService.login(
+            phoneNumber = request.phoneNumber,
+            password = request.password,
         )
         return jwtToken.toResponse()
     }
