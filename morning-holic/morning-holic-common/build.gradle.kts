@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.exposed:exposed-spring-boot-starter")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.40.1")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation(group = "org.jetbrains.exposed", name = "exposed-core", version = "0.38.2")
-    implementation(group = "org.jetbrains.exposed", name = "exposed-dao", version = "0.38.2")
-    implementation(group = "org.jetbrains.exposed", name = "exposed-jdbc", version = "0.38.2")
-    implementation(group = "org.jetbrains.exposed", name = "exposed-java-time", version = "0.38.2")
+    implementation("org.jetbrains.exposed:exposed-core:0.40.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.40.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.40.1")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.40.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
