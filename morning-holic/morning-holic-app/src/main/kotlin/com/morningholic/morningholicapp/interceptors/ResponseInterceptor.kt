@@ -21,7 +21,7 @@ class ResponseInterceptor(
         ex: Exception?
     ) {
         val res = response as ContentCachingResponseWrapper
-        val contentString = String(res.contentAsByteArray)
+        val contentString = res.contentAsByteArray.toString()
         val readValue = objectMapper.readValue(contentString, Any::class.java)
         val objectResponseEntity: ResponseEntity<Any> = ResponseEntity.ok(readValue)
         val wrappedBody = objectMapper.writeValueAsString(objectResponseEntity)
