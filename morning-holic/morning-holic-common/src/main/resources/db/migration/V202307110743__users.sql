@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(20) NOT NULL,
     nickname VARCHAR(50) NOT NULL UNIQUE,
     target_wake_up_time DATETIME,
+    refund_bank VARCHAR(100),
     refund_account VARCHAR(100),
     mode VARCHAR(20),
     status VARCHAR(20) NOT NULL,
