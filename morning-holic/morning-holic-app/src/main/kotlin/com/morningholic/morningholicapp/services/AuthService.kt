@@ -25,6 +25,30 @@ class AuthService(
         password: String,
         nickname: String,
     ): JwtToken {
+        return transaction {
+            validateSignUp(name, phoneNumber, password, nickname)
+
+            val userId = Users.insertAndGetId {
+                it[this.name] = name
+                it[this.phoneNumber] = phoneNumber
+                it[this.password] = passwordEncoder.encode(password)
+                it[this.role] = RoleEnum.USER
+                it[this.nickname] = nickname
+                it[this.status] = UserStatusEnum.INITIAL
+                it[this.createdAt] = LocalDateTime.now()
+                it[this.updatedAt] = LocalDateTime.now()
+            }.value
+
+            JwtUtils.createToken(userId)
+        }
+    }
+
+    private fun validateSignUp(
+        name: String,
+        phoneNumber: String,
+        password: String,
+        nickname: String,
+    ) {
         if (name.isBlank()) {
             throw MHException(
                 ErrorCodeEnum.SIGNUP_FORM_BLANK.code,
@@ -47,33 +71,18 @@ class AuthService(
             )
         }
 
-        return transaction {
-            if (!Users.select { Users.phoneNumber eq phoneNumber }.empty())
-                throw MHException(
-                    ErrorCodeEnum.ALREADY_EXISTED_PHONE_NUMBER.code,
-                    HttpStatus.CONFLICT,
-                    "This Phone Number Already Exists"
-                )
+        if (!Users.select { Users.phoneNumber eq phoneNumber }.empty())
+            throw MHException(
+                ErrorCodeEnum.ALREADY_EXISTED_PHONE_NUMBER.code,
+                HttpStatus.CONFLICT,
+                "This Phone Number Already Exists"
+            )
 
-            if (!Users.select { Users.nickname eq nickname }.empty())
-                throw MHException(
-                    ErrorCodeEnum.ALREADY_EXISTED_NICKNAME.code,
-                    HttpStatus.CONFLICT,
-                    "This Nickname Already Exists"
-                )
-
-            val userId = Users.insertAndGetId {
-                it[this.name] = name
-                it[this.phoneNumber] = phoneNumber
-                it[this.password] = passwordEncoder.encode(password)
-                it[this.role] = RoleEnum.USER
-                it[this.nickname] = nickname
-                it[this.status] = UserStatusEnum.INITIAL
-                it[this.createdAt] = LocalDateTime.now()
-                it[this.updatedAt] = LocalDateTime.now()
-            }.value
-
-            JwtUtils.createToken(userId)
-        }
+        if (!Users.select { Users.nickname eq nickname }.empty())
+            throw MHException(
+                ErrorCodeEnum.ALREADY_EXISTED_NICKNAME.code,
+                HttpStatus.CONFLICT,
+                "This Nickname Already Exists"
+            )
     }
 }
