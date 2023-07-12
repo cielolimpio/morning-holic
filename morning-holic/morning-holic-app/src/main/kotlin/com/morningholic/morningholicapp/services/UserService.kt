@@ -4,6 +4,7 @@ import com.morningholic.morningholicapp.enums.ErrorCodeEnum
 import com.morningholic.morningholiccommon.entities.Users
 import com.morningholic.morningholiccommon.enums.BankEnum
 import com.morningholic.morningholiccommon.enums.ModeEnum
+import com.morningholic.morningholiccommon.enums.UserStatusEnum
 import com.morningholic.morningholiccommon.exception.MHException
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -29,6 +30,7 @@ class UserService {
                 it[this.refundBankName] = refundBankName.value
                 it[this.refundAccount] = refundAccount
                 it[this.mode] = mode
+                it[this.status] = UserStatusEnum.REQUEST
                 it[this.updatedAt] = LocalDateTime.now()
             }
         }
