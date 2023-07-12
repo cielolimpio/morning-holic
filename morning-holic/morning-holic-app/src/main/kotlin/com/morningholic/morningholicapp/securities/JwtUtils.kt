@@ -68,7 +68,7 @@ object JwtUtils {
 
     fun parseUserIdFromToken(token: String): Long {
         val claims = getAllClaims(token)
-        return claims["userId"] as Long
+        return (claims["userId"] as Int).toLong()
     }
 
     fun getAuthenticationByUserId(userId: Long): Authentication {
