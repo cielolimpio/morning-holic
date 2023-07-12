@@ -7,6 +7,7 @@ import com.morningholic.morningholiccommon.entities.Users
 import com.morningholic.morningholiccommon.enums.RoleEnum
 import com.morningholic.morningholiccommon.enums.UserStatusEnum
 import com.morningholic.morningholiccommon.exception.MHException
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -84,5 +85,29 @@ class AuthService(
                 HttpStatus.CONFLICT,
                 "This Nickname Already Exists"
             )
+    }
+
+    fun login(
+        phoneNumber: String,
+        password: String,
+    ): JwtToken {
+        return transaction {
+            Users.select { Users.phoneNumber eq phoneNumber and Users.deletedAt.isNull() }.singleOrNull()
+                ?.let {
+                    if (!passwordEncoder.matches(password, it[Users.password]))
+                        throw MHException(
+                            ErrorCodeEnum.WRONG_PASSWORD.code,
+                            HttpStatus.BAD_REQUEST,
+                            "Wrong Password"
+                        )
+
+                    JwtUtils.createToken(it[Users.id].value)
+                }
+                ?: throw MHException(
+                    ErrorCodeEnum.USER_NOT_FOUND.code,
+                    HttpStatus.NOT_FOUND,
+                    "User Not Found"
+                )
+        }
     }
 }
