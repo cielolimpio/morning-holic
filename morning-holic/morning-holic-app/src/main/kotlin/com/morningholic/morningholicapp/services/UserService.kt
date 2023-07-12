@@ -15,27 +15,30 @@ import java.time.LocalDateTime
 @Service
 class UserService {
     fun register(
-            targetWakeUpTime: LocalDateTime,
-            refundBankName: BankEnum,
-            refundAccount: String,
-            mode: ModeEnum,
-            userId: Long
+        targetWakeUpTime: LocalDateTime,
+        refundBankName: BankEnum,
+        refundAccount: String,
+        mode: ModeEnum,
+        userId: Long
     ){
         validateRegister(refundBankName, refundAccount, mode)
 
         return transaction {
-            Users.update({
-                Users.id eq userId
-            }) {
+            Users.update({ Users.id eq userId }) {
                 it[this.targetWakeUpTime] = targetWakeUpTime
                 it[this.refundBankName] = refundBankName.value
                 it[this.refundAccount] = refundAccount
                 it[this.mode] = mode
+                it[this.updatedAt] = LocalDateTime.now()
             }
         }
     }
 
-    private fun validateRegister(refundBankName: BankEnum, refundAccount: String, mode: ModeEnum) {
+    private fun validateRegister(
+        refundBankName: BankEnum,
+        refundAccount: String,
+        mode: ModeEnum
+    ) {
         if(refundBankName.value.isBlank()){
             throw MHException(ErrorCodeEnum.BANK_NAME_BLANK.code, HttpStatus.BAD_REQUEST, "Bank name is blank.")
         }
@@ -47,7 +50,5 @@ class UserService {
         if(mode.value.isBlank()){
             throw MHException(ErrorCodeEnum.MODE_BLANK.code, HttpStatus.BAD_REQUEST, "Mode is blank.")
         }
-
     }
-
 }
