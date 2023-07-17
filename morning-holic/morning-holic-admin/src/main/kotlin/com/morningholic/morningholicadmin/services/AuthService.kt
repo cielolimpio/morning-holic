@@ -47,4 +47,15 @@ class AuthService(
                 )
         }
     }
+
+    fun refreshToken(refreshToken: String): JwtToken {
+        if (JwtUtils.validateRefreshToken(refreshToken)) {
+            val userId = JwtUtils.parseUserIdFromToken(refreshToken)
+            return JwtUtils.createToken(userId)
+        } else throw MHException(
+            ErrorCodeEnum.REFRESH_TOKEN_EXPIRED.code,
+            HttpStatus.UNAUTHORIZED,
+            "Refresh Token Expired"
+        )
+    }
 }

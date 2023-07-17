@@ -3,6 +3,12 @@ package com.morningholic.morningholicapp.enums
 enum class ErrorCodeEnum(
     val code: Int
 ) {
+    // JWT_TOKEN
+    INVALID_ACCESS_TOKEN(1),
+    ACCESS_TOKEN_EXPIRED(1),
+    INVALID_REFRESH_TOKEN(2),
+    REFRESH_TOKEN_EXPIRED(2),
+
     // AUTH_SERVICE    1000
     SIGNUP_FORM_BLANK(1001),
     ALREADY_EXISTED_PHONE_NUMBER(1002),

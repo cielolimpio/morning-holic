@@ -20,6 +20,12 @@ import java.time.LocalDateTime
 class AuthService(
     private val passwordEncoder: PasswordEncoder
 ) {
+    fun validateSignUp(phoneNumber: String): Boolean {
+        return transaction {
+            Users.select { Users.phoneNumber eq phoneNumber }.empty()
+        }
+    }
+
     fun signUp(
         name: String,
         phoneNumber: String,
@@ -109,5 +115,16 @@ class AuthService(
                     "User Not Found"
                 )
         }
+    }
+
+    fun refreshToken(refreshToken: String): JwtToken {
+        if (JwtUtils.validateRefreshToken(refreshToken)) {
+            val userId = JwtUtils.parseUserIdFromToken(refreshToken)
+            return JwtUtils.createToken(userId)
+        } else throw MHException(
+            ErrorCodeEnum.REFRESH_TOKEN_EXPIRED.code,
+            HttpStatus.UNAUTHORIZED,
+            "Refresh Token Expired"
+        )
     }
 }

@@ -1,5 +1,6 @@
 package com.morningholic.morningholicadmin.securities
 
+import com.morningholic.morningholicadmin.enums.ErrorCodeEnum
 import com.morningholic.morningholiccommon.entities.Users
 import com.morningholic.morningholiccommon.exception.MHException
 import io.jsonwebtoken.Claims
@@ -53,7 +54,11 @@ object JwtUtils {
             val claims = getAllClaims(accessToken)
             return claims.expiration.after(Date())
         } catch (e: Exception) {
-            throw MHException(HttpStatus.FORBIDDEN, "Invalid Access Token")
+            throw MHException(
+                ErrorCodeEnum.INVALID_ACCESS_TOKEN.code,
+                HttpStatus.UNAUTHORIZED,
+                "Invalid Access Token"
+            )
         }
     }
 
@@ -62,7 +67,11 @@ object JwtUtils {
             val claims = getAllClaims(refreshToken)
             return claims.expiration.after(Date())
         } catch (e: Exception) {
-            throw MHException(HttpStatus.FORBIDDEN, "Invalid Refresh Token")
+            throw MHException(
+                ErrorCodeEnum.INVALID_REFRESH_TOKEN.code,
+                HttpStatus.FORBIDDEN,
+                "Invalid Refresh Token"
+            )
         }
     }
 
