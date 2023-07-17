@@ -1,20 +1,25 @@
 package com.morningholic.morningholicapp.controllers
 
 import com.morningholic.morningholicapp.payloads.request.LoginRequest
+import com.morningholic.morningholicapp.payloads.request.RefreshTokenRequest
 import com.morningholic.morningholicapp.payloads.request.SignUpRequest
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse.Companion.toResponse
 import com.morningholic.morningholicapp.services.AuthService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/auth")
 class AuthController(
     private val authService: AuthService,
 ) {
+    @GetMapping("/sign-up/validate")
+    fun validateSignUp(
+        @RequestParam("phoneNumber") phoneNumber: String,
+    ): Boolean {
+        return authService.validateSignUp(phoneNumber)
+    }
+
     @PostMapping("/sign-up")
     fun signUp(
         @RequestBody request: SignUpRequest
@@ -36,6 +41,14 @@ class AuthController(
             phoneNumber = request.phoneNumber,
             password = request.password,
         )
+        return jwtToken.toResponse()
+    }
+
+    @PostMapping("/refresh")
+    fun refreshToken(
+        @RequestBody request: RefreshTokenRequest,
+    ): JwtTokenResponse {
+        val jwtToken = authService.refreshToken(request.refreshToken)
         return jwtToken.toResponse()
     }
 }

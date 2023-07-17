@@ -1,6 +1,8 @@
 package com.morningholic.morningholicadmin.securities
 
+import com.morningholic.morningholicadmin.enums.ErrorCodeEnum
 import com.morningholic.morningholiccommon.exception.MHException
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
@@ -18,10 +20,18 @@ class JwtFilter : OncePerRequestFilter() {
     ) {
         val accessToken = getAccessTokenFromRequest(request)
         try {
-            if (StringUtils.hasText(accessToken) && JwtUtils.validateAccessToken(accessToken!!)) {
-                val userId = JwtUtils.parseUserIdFromToken(accessToken)
-                val authentication = JwtUtils.getAuthenticationByUserId(userId)
-                SecurityContextHolder.getContext().authentication = authentication
+            if (StringUtils.hasText(accessToken)) {
+                if (JwtUtils.validateAccessToken(accessToken!!)) {
+                    val userId = JwtUtils.parseUserIdFromToken(accessToken)
+                    val authentication = JwtUtils.getAuthenticationByUserId(userId)
+                    SecurityContextHolder.getContext().authentication = authentication
+                } else {
+                    throw MHException(
+                        ErrorCodeEnum.ACCESS_TOKEN_EXPIRED.code,
+                        HttpStatus.UNAUTHORIZED,
+                        "Access Token Expired"
+                    )
+                }
             }
             filterChain.doFilter(request, response)
         } catch (e: MHException) {
