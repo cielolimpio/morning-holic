@@ -7,10 +7,12 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import java.util.function.LongSupplier
 
 @Service
@@ -42,6 +44,18 @@ class UserService {
     fun getTotalUserCountByStatus(userStatus: UserStatusEnum): Long {
         return transaction {
             Users.select { Users.status eq userStatus and Users.deletedAt.isNull() }.count()
+        }
+    }
+
+    fun updateUserStatus(
+        userId: Long,
+        userStatus: UserStatusEnum
+    ) {
+        transaction {
+            Users.update({ Users.id eq userId }) {
+                it[status] = userStatus
+                it[updatedAt] = LocalDateTime.now()
+            }
         }
     }
 }

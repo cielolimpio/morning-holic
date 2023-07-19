@@ -22,7 +22,7 @@ data class UserInfoResponse(
                 phoneNumber = this.phoneNumber,
                 nickname = this.nickname,
                 targetWakeUpTime = this.targetWakeUpTime,
-                refundBankNameAndAccount = "${this.refundBankName} ${this.refundAccount}",
+                refundBankNameAndAccount = this.refundAccount?.let { "${this.refundBankName} ${this.refundAccount}" },
                 mode = this.mode,
                 createdAt = this.createdAt,
             )
