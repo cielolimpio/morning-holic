@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -27,5 +29,14 @@ class UserController(
         val userInfoResponses = userInfos.map { it.toResponse() }
 
         return PageableExecutionUtils.getPage(userInfoResponses, pageable) { totalUserCountByStatus }
+    }
+
+    @PutMapping("/status")
+    fun updateUserStatus(
+        @RequestParam("userId") userId: Long,
+        @RequestParam("userStatus") userStatus: UserStatusEnum,
+    ): Boolean {
+        userService.updateUserStatus(userId, userStatus)
+        return true
     }
 }
