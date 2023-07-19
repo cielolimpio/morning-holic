@@ -5,6 +5,7 @@ import com.morningholic.morningholiccommon.enums.ModeEnum
 import java.time.LocalDateTime
 
 data class UserInfoResponse(
+    val userId: Long,
     val name: String,
     val phoneNumber: String,
     val nickname: String,
@@ -16,6 +17,7 @@ data class UserInfoResponse(
     companion object {
         fun UserInfo.toResponse(): UserInfoResponse {
             return UserInfoResponse(
+                userId = this.userId,
                 name = this.name,
                 phoneNumber = this.phoneNumber,
                 nickname = this.nickname,

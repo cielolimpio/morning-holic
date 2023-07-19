@@ -25,6 +25,7 @@ class UserService {
                 .orderBy(Users.id, SortOrder.DESC)
                 .map {
                     UserInfo(
+                        userId = it[Users.id].value,
                         name = it[Users.name],
                         phoneNumber = it[Users.phoneNumber],
                         nickname = it[Users.nickname],

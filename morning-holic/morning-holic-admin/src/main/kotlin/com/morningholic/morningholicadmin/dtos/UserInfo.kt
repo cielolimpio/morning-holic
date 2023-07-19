@@ -4,6 +4,7 @@ import com.morningholic.morningholiccommon.enums.ModeEnum
 import java.time.LocalDateTime
 
 data class UserInfo(
+    val userId: Long,
     val name: String,
     val phoneNumber: String,
     val nickname: String,
