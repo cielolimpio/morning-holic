@@ -5,15 +5,16 @@ import com.morningholic.morningholiccommon.exception.MHException
 
 enum class BankEnum(
     @JsonValue
-    val value: String
+    val value: String,
+    val displayName: String,
 ) {
-    KOOKMIN("국민"),
-    SHINHAN("신한"),
-    KAKAO("카카오뱅크"),
-    WOORI("우리"),
-    SC("SC제일"),
-    INDUSTRIAL("기업"),
-    NONGHYUP("농협");
+    KOOKMIN("KOOKMIN", "국민"),
+    SHINHAN("SHINHAN", "신한"),
+    KAKAO("KAKAO", "카카오뱅크"),
+    WOORI("WOORI", "우리"),
+    SC("SC", "SC제일"),
+    INDUSTRIAL("INDUSTRIAL", "기업"),
+    NONGHYUP("NONGHYUP", "농협");
 
 
     companion object {

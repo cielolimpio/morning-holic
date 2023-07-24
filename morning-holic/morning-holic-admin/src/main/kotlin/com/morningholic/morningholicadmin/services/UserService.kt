@@ -1,7 +1,9 @@
 package com.morningholic.morningholicadmin.services
 
 import com.morningholic.morningholicadmin.dtos.UserInfo
+import com.morningholic.morningholiccommon.entities.UserRegisterHistories
 import com.morningholic.morningholiccommon.entities.Users
+import com.morningholic.morningholiccommon.enums.UserRegisterStatusEnum
 import com.morningholic.morningholiccommon.enums.UserStatusEnum
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
@@ -49,12 +51,23 @@ class UserService {
 
     fun updateUserStatus(
         userId: Long,
-        userStatus: UserStatusEnum
+        userStatus: UserStatusEnum,
+        rejectReason: String?,
     ) {
         transaction {
             Users.update({ Users.id eq userId }) {
-                it[status] = userStatus
-                it[updatedAt] = LocalDateTime.now()
+                it[this.status] = userStatus
+                it[this.updatedAt] = LocalDateTime.now()
+            }
+
+            val userRegisterHistoryId = UserRegisterHistories
+                .select { UserRegisterHistories.user eq userId }
+                .last()[UserRegisterHistories.id].value
+
+            UserRegisterHistories.update({ UserRegisterHistories.id eq userRegisterHistoryId }) {
+                it[this.status] = UserRegisterStatusEnum.from(userStatus.value)
+                it[this.rejectReason] = rejectReason
+                it[this.updatedAt] = LocalDateTime.now()
             }
         }
     }

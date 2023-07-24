@@ -1,5 +1,6 @@
 package com.morningholic.morningholiccommon.entities
 
+import com.morningholic.morningholiccommon.enums.BankEnum
 import com.morningholic.morningholiccommon.enums.ModeEnum
 import com.morningholic.morningholiccommon.enums.RoleEnum
 import com.morningholic.morningholiccommon.enums.UserStatusEnum
@@ -13,7 +14,7 @@ object Users: LongIdTable("users", "id") {
     val role = enumerationByName("role", 20, RoleEnum::class)
     val nickname = varchar("nickname", 50)
     val targetWakeUpTime = datetime("target_wake_up_time").nullable()
-    val refundBankName = varchar("refund_bank_name", 100).nullable()
+    val refundBankName = enumerationByName("refund_bank_name", 100, BankEnum::class).nullable()
     val refundAccount = varchar("refund_account", 100).nullable()
     val mode = enumerationByName("mode", 20, ModeEnum::class).nullable()
     val status = enumerationByName("status", 20, UserStatusEnum::class)
