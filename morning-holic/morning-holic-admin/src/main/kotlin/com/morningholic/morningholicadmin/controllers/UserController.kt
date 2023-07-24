@@ -35,8 +35,13 @@ class UserController(
     fun updateUserStatus(
         @RequestParam("userId") userId: Long,
         @RequestParam("userStatus") userStatus: UserStatusEnum,
+        @RequestParam("rejectReason") rejectReason: String?,
     ): Boolean {
-        userService.updateUserStatus(userId, userStatus)
+        userService.updateUserStatus(
+            userId = userId,
+            userStatus = userStatus,
+            rejectReason = rejectReason
+        )
         return true
     }
 }
