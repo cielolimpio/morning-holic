@@ -38,7 +38,7 @@ class UserController(
         val userInfo = userService.getUserInfo(userId)
         return RegisterResponse(
             targetWakeUpTime = userInfo.targetWakeUpTime!!,
-            refundBankNameAndAccount = "${userInfo.refundBankName} ${userInfo.refundAccount}",
+            refundBankNameAndAccount = "${userInfo.refundBankName!!.displayName} ${userInfo.refundAccount}",
             mode = userInfo.mode!!,
         )
     }
