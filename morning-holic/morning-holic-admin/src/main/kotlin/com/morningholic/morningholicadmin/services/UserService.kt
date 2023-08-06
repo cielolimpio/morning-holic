@@ -1,5 +1,6 @@
 package com.morningholic.morningholicadmin.services
 
+import com.morningholic.morningholicadmin.dtos.TargetWakeUpTimeDto
 import com.morningholic.morningholicadmin.dtos.UserInfo
 import com.morningholic.morningholiccommon.entities.UserRegisterHistories
 import com.morningholic.morningholiccommon.entities.Users
@@ -33,7 +34,12 @@ class UserService {
                         name = it[Users.name],
                         phoneNumber = it[Users.phoneNumber],
                         nickname = it[Users.nickname],
-                        targetWakeUpTime = it[Users.targetWakeUpTime],
+                        targetWakeUpTime = it[Users.targetWakeUpTime]?.let { targetWakeUpTime ->
+                            TargetWakeUpTimeDto(
+                                hour = targetWakeUpTime.hour,
+                                minute = targetWakeUpTime.minute,
+                            )
+                        },
                         refundBankName = it[Users.refundBankName],
                         refundAccount = it[Users.refundAccount],
                         mode = it[Users.mode],

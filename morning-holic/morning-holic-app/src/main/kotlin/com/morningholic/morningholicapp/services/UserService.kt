@@ -1,13 +1,11 @@
 package com.morningholic.morningholicapp.services
 
+import com.morningholic.morningholicapp.dtos.TargetWakeUpTimeDto
 import com.morningholic.morningholicapp.dtos.UserInfo
 import com.morningholic.morningholicapp.enums.ErrorCodeEnum
 import com.morningholic.morningholiccommon.entities.UserRegisterHistories
 import com.morningholic.morningholiccommon.entities.Users
-import com.morningholic.morningholiccommon.enums.BankEnum
-import com.morningholic.morningholiccommon.enums.ModeEnum
-import com.morningholic.morningholiccommon.enums.UserRegisterStatusEnum
-import com.morningholic.morningholiccommon.enums.UserStatusEnum
+import com.morningholic.morningholiccommon.enums.*
 import com.morningholic.morningholiccommon.exception.MHException
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
@@ -28,7 +26,12 @@ class UserService {
                         name = it[Users.name],
                         phoneNumber = it[Users.phoneNumber],
                         nickname = it[Users.nickname],
-                        targetWakeUpTime = it[Users.targetWakeUpTime],
+                        targetWakeUpTime = it[Users.targetWakeUpTime]?.let { targetWakeUpTime ->
+                            TargetWakeUpTimeDto(
+                                hour = targetWakeUpTime.hour,
+                                minute = targetWakeUpTime.minute,
+                            )
+                        },
                         refundBankName = it[Users.refundBankName],
                         refundAccount = it[Users.refundAccount],
                         mode = it[Users.mode],
@@ -59,7 +62,7 @@ class UserService {
 
     fun register(
         userId: Long,
-        targetWakeUpTime: LocalDateTime,
+        targetWakeUpTime: TargetWakeUpTimeDto,
         refundBankName: BankEnum,
         refundAccount: String,
         mode: ModeEnum,
@@ -80,7 +83,7 @@ class UserService {
 
     fun updateRegister(
         userId: Long,
-        targetWakeUpTime: LocalDateTime,
+        targetWakeUpTime: TargetWakeUpTimeDto,
         refundBankName: BankEnum,
         refundAccount: String,
         mode: ModeEnum,
@@ -102,13 +105,13 @@ class UserService {
 
     private fun registerUser(
         userId: Long,
-        targetWakeUpTime: LocalDateTime,
+        targetWakeUpTime: TargetWakeUpTimeDto,
         refundBankName: BankEnum,
         refundAccount: String,
         mode: ModeEnum,
     ) {
         Users.update({ Users.id eq userId }) {
-            it[this.targetWakeUpTime] = targetWakeUpTime
+            it[this.targetWakeUpTime] = TargetWakeUpTimeEnum.toEnum(targetWakeUpTime.hour, targetWakeUpTime.minute)
             it[this.refundBankName] = refundBankName
             it[this.refundAccount] = refundAccount
             it[this.mode] = mode

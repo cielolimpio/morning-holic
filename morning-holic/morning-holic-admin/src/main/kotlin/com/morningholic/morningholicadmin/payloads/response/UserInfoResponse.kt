@@ -1,5 +1,6 @@
 package com.morningholic.morningholicadmin.payloads.response
 
+import com.morningholic.morningholicadmin.dtos.TargetWakeUpTimeDto
 import com.morningholic.morningholicadmin.dtos.UserInfo
 import com.morningholic.morningholiccommon.enums.ModeEnum
 import java.time.LocalDateTime
@@ -9,7 +10,7 @@ data class UserInfoResponse(
     val name: String,
     val phoneNumber: String,
     val nickname: String,
-    val targetWakeUpTime: LocalDateTime?,
+    val targetWakeUpTime: TargetWakeUpTimeDto?,
     val refundBankNameAndAccount: String?,
     val mode: ModeEnum?,
     val createdAt: LocalDateTime,
