@@ -1,9 +1,6 @@
 package com.morningholic.morningholiccommon.entities
 
-import com.morningholic.morningholiccommon.enums.BankEnum
-import com.morningholic.morningholiccommon.enums.ModeEnum
-import com.morningholic.morningholiccommon.enums.RoleEnum
-import com.morningholic.morningholiccommon.enums.UserStatusEnum
+import com.morningholic.morningholiccommon.enums.*
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
 
@@ -13,7 +10,7 @@ object Users: LongIdTable("users", "id") {
     val password = varchar("password", 200)
     val role = enumerationByName("role", 20, RoleEnum::class)
     val nickname = varchar("nickname", 50)
-    val targetWakeUpTime = datetime("target_wake_up_time").nullable()
+    val targetWakeUpTime = enumerationByName("target_wake_up_time", 20, TargetWakeUpTimeEnum::class).nullable()
     val refundBankName = enumerationByName("refund_bank_name", 100, BankEnum::class).nullable()
     val refundAccount = varchar("refund_account", 100).nullable()
     val mode = enumerationByName("mode", 20, ModeEnum::class).nullable()
