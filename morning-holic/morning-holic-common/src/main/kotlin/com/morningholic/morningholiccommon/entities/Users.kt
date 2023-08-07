@@ -9,6 +9,7 @@ object Users: LongIdTable("users", "id") {
     val phoneNumber = varchar("phone_number", 50)
     val password = varchar("password", 200)
     val role = enumerationByName("role", 20, RoleEnum::class)
+    val profileEmoji = varchar("profile_emoji", 10)
     val nickname = varchar("nickname", 50)
     val targetWakeUpTime = enumerationByName("target_wake_up_time", 20, TargetWakeUpTimeEnum::class).nullable()
     val refundBankName = enumerationByName("refund_bank_name", 100, BankEnum::class).nullable()
