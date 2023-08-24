@@ -28,6 +28,7 @@ class AuthController(
             name = request.name,
             phoneNumber = request.phoneNumber,
             password = request.password,
+            profileEmoji = request.profileEmoji,
             nickname = request.nickname,
         )
         return jwtToken.toResponse()

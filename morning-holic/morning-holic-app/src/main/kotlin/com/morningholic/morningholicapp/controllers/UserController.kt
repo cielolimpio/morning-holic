@@ -3,6 +3,7 @@ package com.morningholic.morningholicapp.controllers
 import com.morningholic.morningholicapp.payloads.request.RegisterRequest
 import com.morningholic.morningholicapp.payloads.response.GetUserStatusResponse
 import com.morningholic.morningholicapp.payloads.response.RegisterResponse
+import com.morningholic.morningholicapp.payloads.response.UserInfoResponse
 import com.morningholic.morningholicapp.securities.UserDetailsImpl
 import com.morningholic.morningholicapp.services.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -18,6 +19,25 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(
     private val userService: UserService,
 ) {
+    @GetMapping("/info")
+    fun getUserInfo(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+    ): UserInfoResponse {
+        val userId = userDetails.userId
+        val userInfo = userService.getUserInfo(userId)
+        return UserInfoResponse(
+            userId = userId,
+            name = userInfo.name,
+            phoneNumber = userInfo.phoneNumber,
+            nickname = userInfo.nickname,
+            targetWakeUpTime = userInfo.targetWakeUpTime,
+            refundBankName = userInfo.refundBankName,
+            refundAccount = userInfo.refundAccount,
+            mode = userInfo.mode,
+            status = userInfo.status,
+        )
+    }
+
     @GetMapping("/status")
     fun getUserStatus(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
