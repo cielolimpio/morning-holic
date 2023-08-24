@@ -30,6 +30,7 @@ class AuthService(
         name: String,
         phoneNumber: String,
         password: String,
+        profileEmoji: String,
         nickname: String,
     ): JwtToken {
         return transaction {
@@ -40,6 +41,7 @@ class AuthService(
                 it[this.phoneNumber] = phoneNumber
                 it[this.password] = passwordEncoder.encode(password)
                 it[this.role] = RoleEnum.USER
+                it[this.profileEmoji] = profileEmoji
                 it[this.nickname] = nickname
                 it[this.status] = UserStatusEnum.INITIAL
                 it[this.createdAt] = LocalDateTime.now()

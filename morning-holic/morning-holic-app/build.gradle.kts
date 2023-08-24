@@ -33,6 +33,10 @@ dependencies {
 	implementation(group = "org.jetbrains.exposed", name = "exposed-java-time", version = "0.40.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("com.amazonaws:aws-java-sdk-s3:1.11.478")
+	implementation("com.drewnoakes:metadata-extractor:2.18.0")
+	implementation("org.imgscalr:imgscalr-lib:4.2")
+
 	implementation(project(":morning-holic-common"))
 
 	runtimeOnly("com.mysql:mysql-connector-j")
