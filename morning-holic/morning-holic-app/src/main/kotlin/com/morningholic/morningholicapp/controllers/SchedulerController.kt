@@ -9,7 +9,7 @@ class SchedulerController(
     private val scheduleService: ScheduleService,
 ) {
 
-    @Scheduled(cron = "0 0 4 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     fun schedule() {
         scheduleService.processAllUserScores()
         scheduleService.createNewDiaries()

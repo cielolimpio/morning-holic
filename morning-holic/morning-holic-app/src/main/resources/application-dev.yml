@@ -14,7 +14,7 @@ aws:
   access-key: AKIA4WQKIS3FC7HXIJPV
   secret-key: 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
   s3:
-    Bucket: morning-holic
+    bucket: morning-holic
 
 app:
   security:

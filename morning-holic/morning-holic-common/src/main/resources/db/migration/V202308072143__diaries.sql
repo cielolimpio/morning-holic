@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS diaries (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     type VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     deleted_at DATETIME,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS diaries (
 CREATE TABLE IF NOT EXISTS diary_images (
     id BIGINT NOT NULL AUTO_INCREMENT,
     diary_id BIGINT NOT NULL,
-    image_id BIGINT NOT NULL,
+    image_id BIGINT,
     type VARCHAR(20) NOT NULL,
     minus_score INTEGER DEFAULT 0 NOT NULL,
     created_at DATETIME NOT NULL,

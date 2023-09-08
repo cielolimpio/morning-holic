@@ -3,14 +3,12 @@ package com.morningholic.morningholicadmin.services
 import com.morningholic.morningholicadmin.dtos.TargetWakeUpTimeDto
 import com.morningholic.morningholicadmin.dtos.UserInfo
 import com.morningholic.morningholiccommon.entities.UserRegisterHistories
+import com.morningholic.morningholiccommon.entities.UserScores
 import com.morningholic.morningholiccommon.entities.Users
 import com.morningholic.morningholiccommon.enums.UserRegisterStatusEnum
 import com.morningholic.morningholiccommon.enums.UserStatusEnum
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
@@ -74,6 +72,15 @@ class UserService {
                 it[this.status] = UserRegisterStatusEnum.from(userStatus.value)
                 it[this.rejectReason] = rejectReason
                 it[this.updatedAt] = LocalDateTime.now()
+            }
+
+            if (userStatus == UserStatusEnum.ACCEPT) {
+                UserScores.insert {
+                    it[this.user] = userId
+                    it[this.year] = LocalDateTime.now().year
+                    it[this.month] = LocalDateTime.now().monthValue // TODO
+                    it[this.score] = 100
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ object DiaryImages: LongIdTable("diary_images", "id") {
     val image = reference("image_id", Images).nullable()
     val type = enumerationByName("type", 20, DiaryImageTypeEnum::class)
     val minusScore = integer("minus_score").default(0)
+    val datetime = datetime("datetime").nullable()
+    val timezone = varchar("timezone", 20).nullable()
+    val timezoneOffset = integer("timezone_offset").nullable()
     val createdAt = datetime("created_at").nullable()
-
 }

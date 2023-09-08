@@ -22,9 +22,16 @@ class UserService {
         return transaction {
             Users.select { Users.id eq userId }.firstOrNull()
                 ?.let {
+                    val rejectReason = if (it[Users.status] == UserStatusEnum.REJECT) {
+                        UserRegisterHistories
+                            .select { UserRegisterHistories.user eq userId }
+                            .last()[UserRegisterHistories.rejectReason]
+                    } else null
+
                     UserInfo(
                         name = it[Users.name],
                         phoneNumber = it[Users.phoneNumber],
+                        profileEmoji = it[Users.profileEmoji],
                         nickname = it[Users.nickname],
                         targetWakeUpTime = it[Users.targetWakeUpTime]?.let { targetWakeUpTime ->
                             TargetWakeUpTimeDto(
@@ -36,6 +43,7 @@ class UserService {
                         refundAccount = it[Users.refundAccount],
                         mode = it[Users.mode],
                         status = it[Users.status],
+                        rejectReason = rejectReason,
                     )
                 }
                 ?: throw MHException("User Not Found")

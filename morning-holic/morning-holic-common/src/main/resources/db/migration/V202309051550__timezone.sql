@@ -1,0 +1,40 @@
+ALTER TABLE diary_images
+    ADD COLUMN datetime TIMESTAMP AFTER minus_score,
+    ADD COLUMN timezone VARCHAR(20) AFTER datetime,
+    ADD COLUMN timezone_offset INTEGER AFTER timezone,
+    MODIFY COLUMN created_at TIMESTAMP;
+
+ALTER TABLE diaries
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN deleted_at TIMESTAMP;
+
+ALTER TABLE diary_comment_replies
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN deleted_at TIMESTAMP;
+
+ALTER TABLE diary_comments
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN deleted_at TIMESTAMP;
+
+ALTER TABLE diary_comments
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL;
+
+ALTER TABLE diary_likes
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL;
+
+ALTER TABLE images
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL;
+
+ALTER TABLE users
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN deleted_at TIMESTAMP;
+
+ALTER TABLE user_register_histories
+    MODIFY COLUMN created_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN updated_at TIMESTAMP NOT NULL,
+    MODIFY COLUMN deleted_at TIMESTAMP;
