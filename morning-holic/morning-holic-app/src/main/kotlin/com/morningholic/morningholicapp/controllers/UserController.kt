@@ -29,12 +29,14 @@ class UserController(
             userId = userId,
             name = userInfo.name,
             phoneNumber = userInfo.phoneNumber,
+            profileEmoji = userInfo.profileEmoji,
             nickname = userInfo.nickname,
             targetWakeUpTime = userInfo.targetWakeUpTime,
             refundBankName = userInfo.refundBankName,
             refundAccount = userInfo.refundAccount,
             mode = userInfo.mode,
             status = userInfo.status,
+            rejectReason = userInfo.rejectReason,
         )
     }
 

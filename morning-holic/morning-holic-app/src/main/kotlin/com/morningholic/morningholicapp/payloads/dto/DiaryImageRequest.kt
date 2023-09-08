@@ -8,5 +8,7 @@ data class DiaryImageRequest(
     val thumbnailS3Path: String,
     val diaryImageType: DiaryImageTypeEnum,
     val datetime: LocalDateTime,
+    val timezone: String,
+    val timezoneOffset: Int,
     val minusScore: Int,
 )

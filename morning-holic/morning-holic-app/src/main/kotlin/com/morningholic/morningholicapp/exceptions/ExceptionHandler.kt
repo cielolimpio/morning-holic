@@ -1,5 +1,6 @@
 package com.morningholic.morningholicapp.exceptions
 
+import com.morningholic.morningholicapp.dtos.ErrorContent
 import com.morningholic.morningholiccommon.exception.MHException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -32,7 +33,3 @@ class ExceptionHandler {
     }
 }
 
-data class ErrorContent(
-    val code: Int,
-    val message: String,
-)

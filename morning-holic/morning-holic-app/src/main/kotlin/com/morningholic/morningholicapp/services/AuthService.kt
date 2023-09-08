@@ -3,11 +3,13 @@ package com.morningholic.morningholicapp.services
 import com.morningholic.morningholicapp.enums.ErrorCodeEnum
 import com.morningholic.morningholicapp.securities.JwtToken
 import com.morningholic.morningholicapp.securities.JwtUtils
+import com.morningholic.morningholiccommon.entities.UserScores
 import com.morningholic.morningholiccommon.entities.Users
 import com.morningholic.morningholiccommon.enums.RoleEnum
 import com.morningholic.morningholiccommon.enums.UserStatusEnum
 import com.morningholic.morningholiccommon.exception.MHException
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction

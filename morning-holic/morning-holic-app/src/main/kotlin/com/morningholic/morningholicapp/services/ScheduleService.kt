@@ -46,8 +46,10 @@ class ScheduleService {
                         DiaryImageInfo(
                             imageId = it[DiaryImages.image]?.value,
                             type = it[DiaryImages.type],
+                            datetime = it[DiaryImages.datetime],
+                            timezone = it[DiaryImages.timezone],
+                            timezoneOffset = it[DiaryImages.timezoneOffset],
                             minusScore = it[DiaryImages.minusScore],
-                            createdAt = it[DiaryImages.createdAt]!!,
                         )
                     }
 

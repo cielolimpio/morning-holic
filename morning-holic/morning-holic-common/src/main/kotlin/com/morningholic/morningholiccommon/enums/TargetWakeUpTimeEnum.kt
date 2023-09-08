@@ -18,6 +18,7 @@ enum class TargetWakeUpTimeEnum(
     SEVEN("SEVEN", 7, 0),
     SEVEN_THIRTY("SEVEN_THIRTY", 7, 30),
     EIGHT("EIGHT", 8, 0),
+    EIGHT_THIRTY("EIGHT_THIRTY", 8, 30),
     ;
 
     companion object {

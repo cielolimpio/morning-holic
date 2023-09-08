@@ -7,10 +7,12 @@ import com.morningholic.morningholiccommon.enums.UserStatusEnum
 data class UserInfo(
     val name: String,
     val phoneNumber: String,
+    val profileEmoji: String,
     val nickname: String,
     val targetWakeUpTime: TargetWakeUpTimeDto?,
     val refundBankName: BankEnum?,
     val refundAccount: String?,
     val mode: ModeEnum?,
     val status: UserStatusEnum,
+    val rejectReason: String?,
 )

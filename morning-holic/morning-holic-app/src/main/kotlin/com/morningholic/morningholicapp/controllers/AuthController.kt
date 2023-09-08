@@ -6,6 +6,10 @@ import com.morningholic.morningholicapp.payloads.request.SignUpRequest
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse
 import com.morningholic.morningholicapp.payloads.response.JwtTokenResponse.Companion.toResponse
 import com.morningholic.morningholicapp.services.AuthService
+import com.morningholic.morningholiccommon.entities.DiaryImages
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -38,6 +42,13 @@ class AuthController(
     fun login(
         @RequestBody request: LoginRequest
     ): JwtTokenResponse {
+        transaction {
+            val id = 22.toLong()
+            DiaryImages.select { DiaryImages.id eq id }.first().let {
+                println(it[DiaryImages.datetime])
+                println(it[DiaryImages.createdAt])
+            }
+        }
         val jwtToken = authService.login(
             phoneNumber = request.phoneNumber,
             password = request.password,

@@ -1,5 +1,7 @@
 package com.morningholic.morningholicapp.securities
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.morningholic.morningholicapp.dtos.ErrorContent
 import com.morningholic.morningholicapp.enums.ErrorCodeEnum
 import com.morningholic.morningholiccommon.exception.MHException
 import org.springframework.http.HttpStatus
@@ -35,9 +37,13 @@ class JwtFilter : OncePerRequestFilter() {
             }
             filterChain.doFilter(request, response)
         } catch (e: MHException) {
+            val body = ErrorContent(
+                code = e.code,
+                message = e.message,
+            )
             response.status = e.httpStatusCode.value()
             response.contentType = "application/json"
-            response.writer.write(e.message)
+            response.writer.write(ObjectMapper().writeValueAsString(body))
         }
     }
 

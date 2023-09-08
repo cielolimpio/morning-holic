@@ -7,6 +7,7 @@ data class DiaryImageInfo(
     val imageId: Long?,
     val type: DiaryImageTypeEnum,
     val minusScore: Int,
-    val createdAt: LocalDateTime,
-
+    val datetime: LocalDateTime?,
+    val timezone: String?,
+    val timezoneOffset: Int?,
 )

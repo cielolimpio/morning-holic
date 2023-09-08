@@ -3,21 +3,49 @@ package com.morningholic.morningholicapp.services
 import com.morningholic.morningholiccommon.entities.*
 import com.morningholic.morningholiccommon.enums.DiaryImageTypeEnum
 import com.morningholic.morningholiccommon.enums.DiaryTypeEnum
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 @Service
 class DiaryService {
+    private val log = LoggerFactory.getLogger(DiaryService::class.java)
+
+    fun getDiaryId(userId: Long): Long {
+        return transaction {
+            Diaries.select { Diaries.user eq userId }.lastOrNull()
+                ?.let {
+                    if (it[Diaries.createdAt].dayOfMonth == LocalDateTime.now().dayOfMonth)
+                        it[Diaries.id].value
+                    else {
+                        createDiaryAndGetId(userId)
+                    }
+                }
+                ?: createDiaryAndGetId(userId)
+        }
+    }
+
+    private fun createDiaryAndGetId(userId: Long): Long {
+        return Diaries.insertAndGetId {
+            it[this.user] = userId
+            it[this.type] = DiaryTypeEnum.INDOOR
+            it[this.createdAt] = LocalDateTime.now()
+            it[this.updatedAt] = LocalDateTime.now()
+        }.value
+    }
+
     fun uploadDiaryImage(
         diaryId: Long,
         imageId: Long?,
         diaryImageType: DiaryImageTypeEnum,
-        datetime: LocalDateTime, // 앱에서 찍은 시간
+        datetime: LocalDateTime?, // 앱에서 찍은 시간 UTC 기준
+        timezone: String?,
+        timezoneOffset: Int?,
         minusScore: Int, // 앱에서 디바이스 시간 기준으로 책정
     ) {
         transaction {
@@ -26,7 +54,10 @@ class DiaryService {
                 it[this.image] = imageId
                 it[this.type] = diaryImageType
                 it[this.minusScore] = minusScore
-                it[this.createdAt] = datetime
+                it[this.datetime] = datetime
+                it[this.timezone] = timezone
+                it[this.timezoneOffset] = timezoneOffset
+                it[this.createdAt] = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime()
             }
         }
     }
@@ -34,7 +65,6 @@ class DiaryService {
     fun updateOrInsertDiaryContent(
         diaryId: Long,
         content: String,
-        datetime: LocalDateTime = LocalDateTime.now(),
     ) {
         transaction {
             DiaryContents.select { DiaryContents.diary eq diaryId }.firstOrNull()
@@ -48,7 +78,7 @@ class DiaryService {
                     DiaryContents.insert {
                         it[this.diary] = diaryId
                         it[this.content] = content
-                        it[this.createdAt] = datetime
+                        it[this.createdAt] = LocalDateTime.now()
                         it[this.updatedAt] = LocalDateTime.now()
                     }
                 }

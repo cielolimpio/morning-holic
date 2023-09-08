@@ -3,7 +3,7 @@ package com.morningholic.morningholicapp.controllers
 import com.morningholic.morningholicapp.dtos.DiaryImageInfo
 import com.morningholic.morningholicapp.payloads.dto.DiaryImageRequest
 import com.morningholic.morningholicapp.payloads.request.InsertDiaryContentRequest
-import com.morningholic.morningholicapp.payloads.request.UploadDiaryImageRequest
+import com.morningholic.morningholicapp.payloads.request.UploadDiaryRequest
 import com.morningholic.morningholicapp.securities.UserDetailsImpl
 import com.morningholic.morningholicapp.services.DiaryService
 import com.morningholic.morningholicapp.services.ImageService
@@ -12,6 +12,8 @@ import com.morningholic.morningholiccommon.enums.DiaryTypeEnum
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/diary")
@@ -20,8 +22,8 @@ class DiaryController(
     private val diaryService: DiaryService,
 ) {
     @PostMapping
-    fun uploadDiaryImage(
-        @RequestBody request: UploadDiaryImageRequest,
+    fun uploadDiaryImages(
+        @RequestBody request: UploadDiaryRequest,
         @AuthenticationPrincipal userDetails: UserDetailsImpl
     ) {
         val diaryImageTypes = if (request.diaryType == DiaryTypeEnum.INDOOR) {
@@ -41,36 +43,43 @@ class DiaryController(
                         imageId = imageId,
                         type = diaryImageType,
                         minusScore = diaryImageRequest.minusScore,
-                        createdAt = diaryImageRequest.datetime,
+                        datetime = diaryImageRequest.datetime,
+                        timezone = diaryImageRequest.timezone,
+                        timezoneOffset = diaryImageRequest.timezoneOffset,
                     )
                 }
                 ?: DiaryImageInfo(
                     imageId = null,
                     type = diaryImageType,
                     minusScore = getFailedMinusScore(request.diaryType, diaryImageType),
-                    createdAt = LocalDateTime.now(),
+                    datetime = null,
+                    timezone = null,
+                    timezoneOffset = null,
                 )
         }
 
+        val diaryId = diaryService.getDiaryId(userDetails.userId)
+
         diaryImageInfos.forEach { diaryImageInfo ->
             diaryService.uploadDiaryImage(
-                diaryId = request.diaryId,
+                diaryId = diaryId,
                 imageId = diaryImageInfo.imageId,
                 diaryImageType = diaryImageInfo.type,
-                datetime = diaryImageInfo.createdAt,
+                datetime = diaryImageInfo.datetime,
+                timezone = diaryImageInfo.timezone,
+                timezoneOffset = diaryImageInfo.timezoneOffset,
                 minusScore = diaryImageInfo.minusScore,
             )
         }
 
         diaryService.updateOrInsertDiaryContent(
-            diaryId = request.diaryId,
+            diaryId = diaryId,
             content = request.diaryContent,
-            datetime = request.datetime,
         )
 
         diaryService.totalizeDiary(
             userId = userDetails.userId,
-            diaryId = request.diaryId,
+            diaryId = diaryId,
             diaryType = request.diaryType,
         )
     }

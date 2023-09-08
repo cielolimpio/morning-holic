@@ -1,10 +1,13 @@
 package com.morningholic.morningholicapp.utils
 
+import com.amazonaws.HttpMethod
 import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.transfer.TransferManager
 import com.morningholic.morningholicapp.configs.AWSConfig
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Component
@@ -33,5 +36,12 @@ class S3Util(
         val byteArrayInputStream = ByteArrayInputStream(byteArray)
         val upload = s3Multipart.upload(bucketName, s3Key, byteArrayInputStream, objectMetadata)
         upload.waitForCompletion()
+    }
+
+    fun generatePresignedUrl(s3Path: String): String {
+        val s3Key = s3Path.substringAfter("$bucketName/")
+        return s3Client.generatePresignedUrl(
+            GeneratePresignedUrlRequest(bucketName, s3Key, HttpMethod.PUT)
+        ).toURI().toString()
     }
 }
